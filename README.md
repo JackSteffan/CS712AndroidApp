@@ -1,1 +1,1 @@
-Using Medium Phone API 36.1 and Android OS 16
+Using Medium Phone API 36.1 and Android OS 16.
