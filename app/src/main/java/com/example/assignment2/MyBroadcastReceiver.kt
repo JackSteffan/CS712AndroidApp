@@ -1,4 +1,4 @@
-package com.example.cs712androidapp
+package com.example.assignment2
 
 import android.content.BroadcastReceiver
 import android.content.Context
