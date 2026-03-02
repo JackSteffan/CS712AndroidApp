@@ -18,6 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment2"
+        android:resizeableActivity="true"
         tools:ignore="ForegroundServicePermission">
 
         <!-- Main Activity -->
