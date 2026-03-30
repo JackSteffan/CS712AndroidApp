@@ -1,7 +1,10 @@
 package com.example.assignment2
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.example.assignment2.ui.theme.Assignment2Theme
@@ -39,7 +43,7 @@ class ImageActivity : ComponentActivity() {
                     )
                 }
 
-                val launcher = rememberLauncherForActivityResult(
+                val cameraLauncher = rememberLauncherForActivityResult(
                     ActivityResultContracts.TakePicture()
                 ) { success ->
                     if (success) {
@@ -47,11 +51,31 @@ class ImageActivity : ComponentActivity() {
                     }
                 }
 
+                val permissionLauncher = rememberLauncherForActivityResult(
+                    ActivityResultContracts.RequestPermission()
+                ) { granted ->
+                    if (granted) {
+                        cameraLauncher.launch(contentUri)
+                    } else {
+                        Toast.makeText(this, "Camera permission denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 Column(
                     modifier = Modifier.fillMaxSize().padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Button(onClick = { launcher.launch(contentUri) }) {
+                    Button(onClick = {
+                        if (ContextCompat.checkSelfPermission(
+                                this@ImageActivity,
+                                Manifest.permission.CAMERA
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            cameraLauncher.launch(contentUri)
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
+                    }) {
                         Text("Capture Image")
                     }
 
