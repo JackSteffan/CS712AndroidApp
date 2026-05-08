@@ -28,6 +28,7 @@ import com.example.assignment2.ui.theme.Assignment2Theme
 class MainActivity : ComponentActivity() {
 
     private val customAction = "com.example.MY_ACTION"
+    private val MSE712_PERMISSION = "com.example.assignment2.MSE712"
 
     private val myReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -35,10 +36,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private lateinit var mse712PermissionLauncher: androidx.activity.result.ActivityResultLauncher<String>
+
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
+        mse712PermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+            if (granted) {
+                Toast.makeText(this, "MSE712 permission granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "MSE712 permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        if (ContextCompat.checkSelfPermission(this, MSE712_PERMISSION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            mse712PermissionLauncher.launch(MSE712_PERMISSION)
+        }
 
         val filter = IntentFilter(customAction)
 
